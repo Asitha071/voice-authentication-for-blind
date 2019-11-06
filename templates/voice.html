@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <title>Voice Authenticated Navigation</title>
+  <link rel="stylesheet" type="text/css" href="../static/stylesheets/semantic.min.css" />
+  <link rel="stylesheet" type="text/css" href="../static/stylesheets/example.css" />
+
+</head>
+
+<body class="exampleBody" data-url="{{ url_for('voice') }}">
+  <div id="mainColumn" class="ui middle aligned center aligned grid">
+    <div id="mainForm" class="ui large form">
+      <h2 class="ui center aligned icon header loginText">
+        <img src="{{ url_for('static', filename='images/makefg.jpg')}}" class="ui circular icon loginLogo">
+        Voice Authentication
+      </h2>
+
+      <div class="ui segment secondColor">
+
+        <div id="enrollmentMessage" class="ui message">
+          <div class="ui center aligned header">
+            User Voice Print Enrollment
+            <script>
+             var msg = new SpeechSynthesisUtterance('Please press the y to start recording the background noice');
+            window.speechSynthesis.speak(msg);
+            var msg1 = new SpeechSynthesisUtterance('Also remain silent for 5 seconds press n to stop recording');
+            window.speechSynthesis.speak(msg1);  
+            </script>
+          </div>
+        </div>
+
+        <div id="waveform"></div>
+
+        <!-- <div id="progress" class="ui progress">
+          <div class="bar">
+            <div class="progress"></div>
+          </div>
+          <div class="label">Uploading Files</div>
+        </div> -->
+
+        <script>
+          
+            // window.onkeypress = function(event) {
+            //    if (key == e) {
+            //     console.log("The enroll button works!");
+            //   window.location.href = '/enroll';
+            //    }
+            // }
+            document.addEventListener('DOMContentLoaded', () => {
+                'use strict';
+            
+                document.addEventListener('keydown', event => {
+                    const key = event.key.toLowerCase();
+                    console.log(key);
+                    if (key == "y") {
+                   console.log("The start recording button works!");
+                   document.getElementById("startRecButton").click();
+                   }
+            
+                   if(key == "n"){
+                    console.log("The stop recording button works!");
+                    document.getElementById("stopRecButton").click();
+            
+            
+                   }
+                   if(key == "c"){
+                    console.log("The x button works!");
+                    document.getElementById("close_button_accept").click();
+                    // document.getElementById("close_button_reject").click();
+            
+            
+                   }
+                   if(key == "l"){
+                    console.log("The x button works!");
+                    
+                     document.getElementById("close_button_reject").click();
+            
+            
+                   }
+                   if(key == "-"){
+                    console.log("The back button works!");
+                    window.location.href = '/';
+                          
+                          
+                   }
+                   if(key == "h"){
+                    console.log("go to home!");
+                    
+                    document.getElementById("authenticationInComplete").click();
+                    
+                          
+                          
+                   }
+                   if(key == "a"){
+                    console.log("authenticate yourself");
+                    
+                    window.location.href = '/auth';
+                    
+                          
+                          
+                   }
+                   
+                
+                    
+                });
+            });
+            
+            
+                      
+                     
+                    </script>
+                      
+
+        <button id="startRecButton" class="fluid ui button">
+          <i class="microphone icon"></i>
+          Start Recording
+        </button>
+        <button id="stopRecButton" class="fluid ui button">
+          <i class="microphone slash icon"></i>
+          Stop Recording
+        </button>
+
+        <div id="environmentMessage" class="ui red icon message">
+          <i class="notched circle loading icon"></i>
+          <div class="content">
+            <div class="header">
+              Scanning for Environmental Sound
+            </div>
+            <p id="recordBody">Please remain silent for 5 seconds </p>
+          </div>
+        </div>
+
+        <div id="vadMessage" class="ui yellow icon message">
+          <i class="notched circle loading icon"></i>
+          <div class="content">
+            <div class="header">
+              Analyzing audio
+            </div>
+            <p id="recordBody">Matching words to generated words</p>
+          </div>
+        </div>
+
+        <div id="passphraseMessage" class="ui icon message" >
+           
+          <i class="shield alternate icon"></i>
+          <div class="content">
+            <div class="header" >
+              <!-- <script>
+                var msg4 = new SpeechSynthesisUtterance('Please recite the following words');
+                window.speechSynthesis.speak(msg4); 
+                </script> -->
+                
+              Please recite the following words
+            </div>
+            <p id="randomPassphrase"> {{ passphrase }} </p>
+          </div>
+        </div>
+        <!-- <script>
+          function myFunction() {
+            var msg4 = new SpeechSynthesisUtterance('Please recite the following words');
+         window.speechSynthesis.speak(msg4);
+         var msg5 = new SpeechSynthesisUtterance('{{ passphrase }}');
+         window.speechSynthesis.speak(msg5);  
+            }
+         
+         </script> -->
+        <div id="acceptMessage" class="ui positive message">
+          <i id="close_button_accept" class="close icon"></i>
+          <div class="header">
+            Success
+          </div>
+          <p>Your voice sample was successfully created.</p>
+        </div>
+
+        <div id="rejectMessage" class="ui negative message">
+          <i id="close_button_reject" class="close icon"></i>
+          <div class="header">
+            Your voice sample was not succesful.
+          </div>
+          <p>This could be because of the following reasons:
+            <ul class="list">
+              <li>The words you have spoken aren't entirely correct</li>
+              <li>IBM Speech to Text could not understand the audio.</li>
+              <li>Could not request results from IBM Speech to Text service.</li>
+            </ul>
+          </p>
+        </div>       
+
+      </div>
+      <div id="enrollmentComplete" class="ui bottom attached positive message">
+        <i class="icon succesful"></i>
+       Voice Print enrollment Successful! <a href="/auth">Authenticate yourself here</a>.
+      </div>
+
+      <div id="authenticationComplete" class="ui bottom attached positive message">
+        <i class="icon succesful"></i>
+       You have been successfully been Authenticated! <a href="/">Go back to the main page</a>.
+      </div>
+
+      <div id="authenticationInComplete" class="ui bottom attached negative message">
+        <i class="icon succesful"></i>
+       Sorry your voice print does not match! <a href="/">Go back to the main page</a>.
+      </div>
+
+    </div>
+  </div>
+
+  
+</body>
+
+<script src="https://unpkg.com/wavesurfer.js"></script>
+<script src="../static/javascript/p5.min.js"></script>
+<script src="../static/javascript/p5.sound.min.js"></script>
+<script src="../static/javascript/p5.dom.min.js"></script>
+<script src="../static/javascript/wavesurfer.microphone.min.js"></script>
+<script src="../static/javascript/voice.js"></script>
+</html>
